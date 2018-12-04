@@ -6,12 +6,12 @@ namespace ToDoList.Models
   public class Item
   {
     private string _description;
-    // private int _id;
+    private int _id;
 
-    public Item (string description)
+    public Item (string description, int id = 0)
     {
       _description = description;
-      // _id = _instances.Count;
+      _id = id;
     }
 
     public string GetDescription()
@@ -26,7 +26,7 @@ namespace ToDoList.Models
 
     public int GetId()
     {
-      return 0;
+      return _id;
     }
 
     public static List<Item> GetAll()
@@ -76,7 +76,8 @@ namespace ToDoList.Models
       description.ParameterName = "@ItemDescription";
       description.Value = this._description;
       cmd.Parameters.Add(description);
-      cmd.ExecuteNonQuery(); 
+      cmd.ExecuteNonQuery();
+      _id = cmd.LastInsertedId;
 
       conn.Close();
       if (conn != null)

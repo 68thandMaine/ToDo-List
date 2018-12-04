@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ToDoList
+namespace TaskMaster
 {
   public class Startup
   {
+
     public Startup(IHostingEnvironment env)
     {
       var builder = new ConfigurationBuilder()
@@ -23,22 +24,27 @@ namespace ToDoList
       services.AddMvc();
     }
 
-    public void Configure(IApplicationBuilder app)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       app.UseDeveloperExceptionPage();
       app.UseMvc(routes =>
       {
-        routes.MapRoute(
-          name: "default",
-          template: "{controller=Home}/{action=Index}/{id?}");
+          routes.MapRoute(
+              name: "default",
+              template: "{controller=Home}/{action=Index}/{id?}");
       });
 
-        app.Run(async (context) =>
-        {
-          await context.Response.WriteAsync("Something went wrong!");
-        });
+      app.UseStaticFiles();
+
+      app.Run(async (context) =>
+      {
+          await context.Response.WriteAsync("TaskMaster: Something went wrong . . .");
+      });
 
     }
-
+  }
+  public static class DBConfiguration
+  {
+    public static string ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=taskmaster;";
   }
 }

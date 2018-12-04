@@ -118,7 +118,7 @@ namespace ToDoList.Tests
         public void Save_AssignsIdToObject_Id()
         {
           //Arrange
-          Item testItem = new Item("Mow the lawn")
+          Item testItem = new Item("Mow the lawn");
 
           //Act
           testItem.Save();

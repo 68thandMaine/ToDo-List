@@ -145,9 +145,45 @@ namespace ToDoList.Models
       // return dummyItem;
     }
 
-    public void Edit(string description)
+    public void Edit(string newDescription)
     {
-      
+      //Open a connection to the database: /////////////
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      //////////////////////////////////////////////////
+
+      //Create a new MySqlCommand object and enter a SQL statement
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"UPDATE items SET description = @newDescription WHERE id = @searchId;";
+      ///////////////////////////////////////////////////////
+
+      // We now pass the paramater placeholders into MySqlParameter objects //////
+      // Obect 1:
+      MySqlParameter searchId = new MySqlParameter();
+      searchId.ParameterName = "@searchId";
+      searchId.Value = _id;
+      cmd.Parameters.Add(searchId);
+      // Object 2:
+      MySqlParameter description = new MySqlParameter();
+      description.ParameterName = "@newDescription";
+      description.Value = newDescription;
+      cmd.Parameters.Add(description);
+      ///////////////////////////////////////////////////////////////////////////
+
+      // Execute the command with an ExecuteNonQuery() /////////
+      cmd.ExecuteNonQuery();
+      /////////////////////////////////////////////////////
+
+      // Reset the Object property on the app ////
+      _description = newDescription;
+      //////////
+
+      //Close the connection to the database: ////////
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
     }
   }
 }

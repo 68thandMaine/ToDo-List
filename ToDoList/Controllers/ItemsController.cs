@@ -36,7 +36,7 @@ namespace ToDoList.Controllers
         public ActionResult DeleteAll()
         {
           Item.ClearAll();
-          return View();
+          return RedirectToAction("Index");
         }
 
       }

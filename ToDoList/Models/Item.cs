@@ -62,7 +62,7 @@ namespace ToDoList.Models
       conn.Close();
       if (conn != null)
       {
-       conn.Dispose();
+        conn.Dispose();
       }
     }
 
@@ -139,11 +139,15 @@ namespace ToDoList.Models
         conn.Dispose();
       }
 
+      return foundItem;
       // Temporarily returning dummy item to get beyond compiler errors, until we refactor to work with database.
       // Item dummyItem = new Item("dummy item");
       // return dummyItem;
     }
 
-
+    public void Edit(string description)
+    {
+      
+    }
   }
 }

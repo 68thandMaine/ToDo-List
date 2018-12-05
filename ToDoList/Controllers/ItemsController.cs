@@ -14,12 +14,6 @@ namespace ToDoList.Controllers
            return View(category);
         }
 
-        [HttpPost("/items")]
-        public ActionResult Create(string description)
-        {
-          Item myItem = new Item(description);
-          return RedirectToAction("Index");
-        }
 
         [HttpGet("/categories/{categoryId}/items/{itemId}")]
         public ActionResult Show(int categoryId, int itemId)
@@ -30,13 +24,6 @@ namespace ToDoList.Controllers
           model.Add("item", item);
           model.Add("category", category);
           return View(model);
-        }
-
-        [HttpPost("/items/delete")]
-        public ActionResult DeleteAll()
-        {
-          Item.ClearAll();
-          return RedirectToAction("Index");
         }
 
       }

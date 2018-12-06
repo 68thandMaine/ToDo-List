@@ -17,6 +17,7 @@ namespace ToDoList.Tests
     public void Dispose()
     {
       Category.ClearAll();
+      Item.ClearAll();
     }
 
     [TestMethod]
@@ -104,21 +105,17 @@ namespace ToDoList.Tests
         CollectionAssert.AreEqual(newList, result);
       }
       [TestMethod]
-      public void AddItem_AssociatesItemWithCategory_ItemList()
+      public void GetItems_RetrievesAllItemsWithCategory_ItemList()
       {
-        //Arrange
-        string description = "Walk the dog.";
-        Item newItem = new Item(description, 1);
-        List<Item> newList = new List<Item> { newItem };
-        string name = "Work";
-        Category newCategory = new Category(name);
-        newCategory.AddItem(newItem);
-
-        //Act
-        List<Item> result = newCategory.GetItems();
-
-        //Assert
-        CollectionAssert.AreEqual(newList, result);
+        Category testCategory = new Category("Household chores");
+        testCategory.Save();
+        Item firstItem = new Item("Mow the lawn", testCategory.GetId());
+        firstItem.Save();
+        Item secondItem = new Item("Do the dishes", testCategory.GetId());
+        secondItem.Save();
+        List<Item> testItemList = new List<Item> {firstItem, secondItem};
+        List<Item> resultItemList = testCategory.GetItems();
+        CollectionAssert.AreEqual(testItemList, resultItemList);
       }
       [TestMethod]
       public void GetAll_CategoriesEmptyAtFirst_List()

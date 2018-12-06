@@ -6,7 +6,8 @@ using System;
 namespace ToDoList.Tests
 {
   [TestClass]
-  public class CategoryTest : IDisposable
+  public class CategoryTest
+  : IDisposable
   {
     public CategoryTest()
     {
@@ -17,6 +18,7 @@ namespace ToDoList.Tests
     {
       Category.ClearAll();
     }
+
     [TestMethod]
     public void CategoryConstructor_CreastesInstanceOfCategory_Category()
     {
@@ -37,50 +39,56 @@ namespace ToDoList.Tests
       Assert.AreEqual(name, result);
 
     }
-    // [TestMethod]
-    // public void GetId_ReturnsCategoryId_Int()
-    // {
-    //   //Arrange
-    //   string name = "Test Category";
-    //   Category newCategory = new Category(name);
-    //
-    //   //Act
-    //   int result = newCategory.GetId();
-    //
-    //   //Assert
-    //   Assert.AreEqual(1, result);
-    // }
-    // [TestMethod]
-    //  public void GetAll_ReturnsAllCategoryObjects_CategoryList()
-    //  {
-    //    //Arrange
-    //    string name01 = "Work";
-    //    string name02 = "School";
-    //    Category newCategory1 = new Category(name01);
-    //    Category newCategory2 = new Category(name02);
-    //    List<Category> newList = new List<Category> { newCategory1, newCategory2 };
-    //
-    //    //Act
-    //    List<Category> result = Category.GetAll();
-    //
-    //    //Assert
-    //    CollectionAssert.AreEqual(newList, result);
-    //  }
-     // [TestMethod]
-     //  public void Find_ReturnsCorrectCategory_Category()
-     //  {
-     //    //Arrange
-     //    string name01 = "Work";
-     //    string name02 = "School";
-     //    Category newCategory1 = new Category(name01);
-     //    Category newCategory2 = new Category(name02);
-     //
-     //    //Act
-     //    Category result = Category.Find(2);
-     //
-     //    //Assert
-     //    Assert.AreEqual(newCategory2, result);
-     //  }
+
+    [TestMethod]
+    public void Equals_ReturnsTrueIfNamesAreTheSame_Category()
+    {
+      Category firstCategory = new Category("Household chores");
+      Category secondCategory = new Category("Household chores");
+      Assert.AreEqual(firstCategory, secondCategory);
+    }
+
+    [TestMethod]
+    public void Save_SavesCategoryToDatabase_CategoryList()
+    {
+      Category testCategory = new Category("Household chores");
+      testCategory.Save();
+      List<Category> result = Category.GetAll();
+      List<Category> testList = new List<Category> {testCategory};
+      CollectionAssert.AreEqual(testList, result);
+    }
+
+    [TestMethod]
+     public void GetAll_ReturnsAllCategoryObjects_CategoryList()
+     {
+       //Arrange
+       string name01 = "Work";
+       string name02 = "School";
+       Category newCategory1 = new Category(name01);
+       newCategory1.Save();
+       Category newCategory2 = new Category(name02);
+       newCategory2.Save();
+       List<Category> newList = new List<Category> { newCategory1, newCategory2 };
+
+       //Act
+       List<Category> result = Category.GetAll();
+
+       //Assert
+       CollectionAssert.AreEqual(newList, result);
+     }
+     [TestMethod]
+      public void Find_ReturnsCorrectCategory_Category()
+      {
+        //Arrange
+        Category testCategory = new Category("Household chores");
+        testCategory.Save();
+
+        //Act
+        Category foundCategory = Category.Find(testCategory.GetId());
+
+        //Assert
+        Assert.AreEqual(testCategory, foundCategory);
+      }
       [TestMethod]
       public void GetItems_ReturnsEmptyItemList_ItemList()
       {
@@ -117,6 +125,20 @@ namespace ToDoList.Tests
       {
         int result = Category.GetAll().Count;
         Assert.AreEqual(0, result);
+      }
+
+      [TestMethod]
+      public void Save_DatabaseAssignsIdToCategory_Id()
+      {
+        Category testCategory = new Category("Household chores");
+        testCategory.Save();
+
+        Category savedCategory = Category.GetAll()[0];
+
+        int result = savedCategory.GetId();
+        int testId = testCategory.GetId();
+        Console.WriteLine("---------" + testId);
+        Assert.AreEqual(testId, result);
       }
 
   }

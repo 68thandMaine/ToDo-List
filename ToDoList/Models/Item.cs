@@ -29,6 +29,7 @@ namespace ToDoList.Models
     public int GetId()
     {
       return _id;
+            //To fail GetId - add return 0; and comment out the private id property and id prperty in the item constructor.
     }
 
     public static List<Item> GetAll()
@@ -53,6 +54,13 @@ namespace ToDoList.Models
         conn.Dispose();
       }
       return allItems;
+      //To fail Get All Empty List method use this code
+// Item dummyItem = new Item("dummy item");
+// List<Item> allItems = new List<Item> { dummyItem };
+// return allItems;
+
+//Get All Returns Items will fail until Save is running on objects.
+//Add object.Save() after Save method code is added to make it pass.
     }
 
     public static void ClearAll()
@@ -73,19 +81,18 @@ namespace ToDoList.Models
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
-      var cmd = conn.CreateCommand() as MySqlCommand;
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"INSERT INTO items (description, category_id) VALUES (@ItemDescription, @category_id);";
       MySqlParameter description = new MySqlParameter();
       description.ParameterName = "@ItemDescription";
       description.Value = this._description;
       cmd.Parameters.Add(description);
       MySqlParameter categoryId = new MySqlParameter();
-      categoryId.ParameterName = "@categoryId";
-      description.Value = this._categoryId;
+      categoryId.ParameterName = "@category_id";
+      categoryId.Value = this._categoryId;
       cmd.Parameters.Add(categoryId);
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
-
       conn.Close();
       if (conn != null)
       {

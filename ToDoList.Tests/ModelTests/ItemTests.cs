@@ -167,20 +167,20 @@ namespace ToDoList.Tests
       Assert.AreEqual(secondDescription, result);
     }
 
-    [TestMethod]
-    public void GetCategoryId_ReturnsItemsParentCategoryId_Int()
-    {
-      //Arrange
-      Category newCategory = new Category("Home Tasks");
-      Item newItem = new Item("Walk the dog", newCategory.GetId());
-
-      //Act
-      int result = newItem.GetCategoryId();
-
-      //Assert
-      Assert.AreEqual(newCategory.GetId(), result);
-
-
-    }
+    // [TestMethod]
+    // public void GetCategoryId_ReturnsItemsParentCategoryId_Int()
+    // {
+    //   //Arrange
+    //   Category newCategory = new Category("Home Tasks");
+    //   Item newItem = new Item("Walk the dog", newCategory.GetId());
+    //
+    //   //Act
+    //   int result = newItem.GetCategoryId();
+    //
+    //   //Assert
+    //   Assert.AreEqual(newCategory.GetId(), result);
+    //
+    //
+    // }
   }
 }

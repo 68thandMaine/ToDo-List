@@ -7,10 +7,12 @@ namespace ToDoList.Models
   {
     private string _description;
     private int _id;
+    private int _categoryId;
 
-    public Item (string description, int id = 0)
+    public Item (string description, int categoryId, int id = 0)
     {
       _description = description;
+      _categoryId = categoryId;
       _id = id;
     }
 
@@ -41,7 +43,8 @@ namespace ToDoList.Models
       {
         int itemId = rdr.GetInt32(0);
         string itemDescription = rdr.GetString(1);
-        Item newItem = new Item(itemDescription, itemId);
+        int itemCategoryId = rdr.GetInt32(2);
+        Item newItem = new Item(itemDescription, itemCategoryId, itemId);
         allItems.Add(newItem);
       }
       conn.Close();
@@ -71,11 +74,15 @@ namespace ToDoList.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO items (description) VALUES (@ItemDescription);";
+      cmd.CommandText = @"INSERT INTO items (description, category_id) VALUES (@ItemDescription, @category_id);";
       MySqlParameter description = new MySqlParameter();
       description.ParameterName = "@ItemDescription";
       description.Value = this._description;
       cmd.Parameters.Add(description);
+      MySqlParameter categoryId = new MySqlParameter();
+      categoryId.ParameterName = "@categoryId";
+      description.Value = this._categoryId;
+      cmd.Parameters.Add(categoryId);
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
 
@@ -97,7 +104,8 @@ namespace ToDoList.Models
         Item newItem = (Item) otherItem;
         bool idEquality = (this.GetId() == newItem.GetId());
         bool descriptionEquality = (this.GetDescription() == newItem.GetDescription());
-        return (idEquality && descriptionEquality);
+        bool categoryEquality = this.GetCategoryId() == newItem.GetCategoryId();
+        return (idEquality && descriptionEquality && categoryEquality);
       }
     }
 
@@ -123,14 +131,16 @@ namespace ToDoList.Models
       //Initiate reading the database with a while loop
       int itemId = 0;
       string itemDescription = "";
+      int itemCategoryId = 0;
       while (rdr.Read())
       {
         itemId = rdr.GetInt32(0);
         itemDescription = rdr.GetString(1);
+        itemCategoryId = rdr.GetInt32(2);
       }
 
       //Create and return a new Item object with the values that were located
-      Item foundItem = new Item(itemDescription, itemId);
+      Item foundItem = new Item(itemDescription, itemCategoryId, itemId);
 
       //Close a connection to the database
       conn.Close();
@@ -187,7 +197,7 @@ namespace ToDoList.Models
     }
     public int GetCategoryId()
     {
-      return 89;
+      return _categoryId;
     }
   }
 }

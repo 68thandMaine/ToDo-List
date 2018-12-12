@@ -77,7 +77,7 @@ namespace ToDoList.Models
       //Remember to use @thisId for the placeholder
       cmd.CommandText = @"Select * FROM `items` WHERE id = (@thisId);";
 
-      //Create the MySqlParamater object for feeding VALUES
+      //Create the MySqlparameter object for feeding VALUES
       MySqlParameter thisId = new MySqlParameter();
       thisId.ParameterName = "@thisId";
       thisId.Value = id;
@@ -122,7 +122,7 @@ namespace ToDoList.Models
       cmd.CommandText = @"UPDATE items SET description = @newDescription WHERE id = @searchId;";
       ///////////////////////////////////////////////////////
 
-      // We now pass the paramater placeholders into MySqlParameter objects //////
+      // We now pass the parameter placeholders into MySqlParameter objects //////
       // Obect 1:
       MySqlParameter searchId = new MySqlParameter();
       searchId.ParameterName = "@searchId";
@@ -184,12 +184,48 @@ namespace ToDoList.Models
     }
     public List<Category> GetCategories()
     {
-      List<Category> categories = new List<Category>{};
-      return categories;
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT category_id FROM categories_id  WHERE item_id = @itemId;";
+      MySqlParameter itemIdParameter = new MySqlParameter();
+      itemIdParameter.ParameterName = @"itemId";
+      itemIdParameter.Value=_id;
+      cmd.Parameters.Add(itemIdParameter);
+      var rdr = cmd.ExecuteReader() as My MySqlDataReader;
+      List<int> categoryIds = new List<int> {};
+      while(rdr.Read())
+      {
+        int categoryId = rdr.GetInt32(0);
+        categoryIds.Add(categoryId);
+      }
+      rdr.Dispose();
+      List<Category> categories = new List<Category> {};
+      foreach (int categoryId in categoryIds)
+      {
+
+      }
     }
     public void AddCategory(Category newCategory)
     {
-
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"INSERT INTO categories_items (category_id, item_id) VALUES (@CategoryId, ItemId);";
+      MySqlParameter category_id = new MySqlParameter();
+      category_id.ParameterName = "@CategoryId";
+      category_id.Value = newCategory.GetId();
+      cmd.Parameters.Add(category_id);
+      MySqlParameter item_id = new MySqlParameter();
+      item_id.ParameterName = "@ItemId";
+      item_id.Value = _id;
+      cmd.Parameters.Add(item_id);
+      cmd.ExecuteNonQuery();
+      conn.Close();
+      if(conn != null)
+      {
+        conn.Dispose();
+      }
     }
     }
   }

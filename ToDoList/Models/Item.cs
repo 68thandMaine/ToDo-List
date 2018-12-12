@@ -169,7 +169,7 @@ namespace ToDoList.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO items (description,) VALUES (@ItemDescription);";
+      cmd.CommandText = @"INSERT INTO items (description) VALUES (@ItemDescription);";
       MySqlParameter description = new MySqlParameter();
       description.ParameterName = "@ItemDescription";
       description.Value = this._description;
@@ -182,6 +182,14 @@ namespace ToDoList.Models
         conn.Dispose();
       }
     }
+    public List<Category> GetCategories()
+    {
+      List<Category> categories = new List<Category>{};
+      return categories;
+    }
+    public void AddCategory(Category newCategory)
+    {
 
+    }
     }
   }

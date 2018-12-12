@@ -7,12 +7,11 @@ namespace ToDoList.Models
   {
     private string _description;
     private int _id;
-    private int _categoryId;
 
-    public Item (string description, int categoryId, int id = 0)
+
+    public Item (string description, int id = 0)
     {
       _description = description;
-      _categoryId = categoryId;
       _id = id;
     }
 
@@ -29,7 +28,7 @@ namespace ToDoList.Models
     public int GetId()
     {
       return _id;
-            //To fail GetId - add return 0; and comment out the private id property and id prperty in the item constructor.
+            // To fail GetId - add return 0; and comment out the private id property and id prperty in the item constructor.
     }
 
     public static List<Item> GetAll()
@@ -45,7 +44,7 @@ namespace ToDoList.Models
         int itemId = rdr.GetInt32(0);
         string itemDescription = rdr.GetString(1);
         int itemCategoryId = rdr.GetInt32(2);
-        Item newItem = new Item(itemDescription, itemCategoryId, itemId);
+        Item newItem = new Item(itemDescription,  itemId);
         allItems.Add(newItem);
       }
       conn.Close();
@@ -54,13 +53,13 @@ namespace ToDoList.Models
         conn.Dispose();
       }
       return allItems;
-      //To fail Get All Empty List method use this code
+      // To fail Get All Empty List method use this code
 // Item dummyItem = new Item("dummy item");
 // List<Item> allItems = new List<Item> { dummyItem };
-// return allItems;
+return allItems;
 
-//Get All Returns Items will fail until Save is running on objects.
-//Add object.Save() after Save method code is added to make it pass.
+// Get All Returns Items will fail until Save is running on objects.
+// Add object.Save() after Save method code is added to make it pass.
     }
 
     public static void ClearAll()
@@ -82,15 +81,11 @@ namespace ToDoList.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO items (description, category_id) VALUES (@ItemDescription, @category_id);";
+      cmd.CommandText = @"INSERT INTO items (description,) VALUES (@ItemDescription);";
       MySqlParameter description = new MySqlParameter();
       description.ParameterName = "@ItemDescription";
       description.Value = this._description;
       cmd.Parameters.Add(description);
-      MySqlParameter categoryId = new MySqlParameter();
-      categoryId.ParameterName = "@category_id";
-      categoryId.Value = this._categoryId;
-      cmd.Parameters.Add(categoryId);
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
       conn.Close();
@@ -111,8 +106,7 @@ namespace ToDoList.Models
         Item newItem = (Item) otherItem;
         bool idEquality = (this.GetId() == newItem.GetId());
         bool descriptionEquality = (this.GetDescription() == newItem.GetDescription());
-        bool categoryEquality = this.GetCategoryId() == newItem.GetCategoryId();
-        return (idEquality && descriptionEquality && categoryEquality);
+        return (idEquality && descriptionEquality );
       }
     }
 
